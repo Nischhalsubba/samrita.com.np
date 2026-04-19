@@ -96,7 +96,18 @@ const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
+        if (window.gsap && !reduceMotion) {
+          gsap.to(entry.target, {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            ease: "power2.out",
+            overwrite: true
+          });
+          entry.target.classList.add("is-visible");
+        } else {
+          entry.target.classList.add("is-visible");
+        }
         observer.unobserve(entry.target);
       }
     });
@@ -107,6 +118,9 @@ const observer = new IntersectionObserver(
 document.querySelectorAll(".reveal").forEach((element, index) => {
   const isMobile = window.matchMedia("(max-width: 760px)").matches;
   element.style.transitionDelay = `${Math.min(index * (isMobile ? 32 : 45), isMobile ? 150 : 220)}ms`;
+  if (window.gsap && !reduceMotion) {
+    gsap.set(element, { opacity: 0, y: element.classList.contains("hero-text") ? 48 : 24 });
+  }
   observer.observe(element);
 });
 

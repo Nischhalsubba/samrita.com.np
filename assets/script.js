@@ -120,13 +120,14 @@ contactForm?.addEventListener("submit", (event) => {
   }
 
   button.disabled = true;
-  button.textContent = "Sending...";
+  const originalButtonText = button.textContent;
+  button.textContent = "Please wait...";
   message.textContent = "Submitting your message...";
   message.className = "form-message";
 
   window.setTimeout(() => {
     button.disabled = false;
-    button.textContent = "Send message";
+    button.textContent = originalButtonText;
     message.textContent = "Thank you! Your submission has been received.";
     message.className = "form-message success";
     contactForm.reset();

@@ -21,6 +21,22 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://samrita.com.np/projects/student-portfolio-website.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samrita.com.np/projects/concrete-mix-calculator.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samrita.com.np/projects/survey-field-notes.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samrita.com.np/projects/campus-study-planner.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://samrita.com.np/start-here.html</loc>
     <priority>0.2</priority>
   </url>

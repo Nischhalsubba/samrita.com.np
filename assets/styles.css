@@ -448,6 +448,7 @@ textarea {
   top: 9rem;
   left: 50%;
   margin-left: -250px;
+  animation: diamond-rotate 28s linear infinite;
 }
 
 .footer-bg {
@@ -456,6 +457,16 @@ textarea {
   width: 600px;
   height: 600px;
   margin-left: -300px;
+}
+
+@keyframes diamond-rotate {
+  from {
+    transform: rotate(45deg);
+  }
+
+  to {
+    transform: rotate(405deg);
+  }
 }
 
 .arrow-button {
@@ -670,6 +681,21 @@ textarea {
   opacity: 0;
   transform: translateY(0.75rem);
   transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+}
+
+.project-card.always-visible::before,
+.project-card.always-visible .card-text-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.record-link {
+  display: inline-flex;
+  margin-top: 0.75rem;
+  color: var(--white);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
 }
 
 .project-card:hover::before,

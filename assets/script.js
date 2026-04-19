@@ -133,17 +133,17 @@ document.querySelectorAll("a, button, .project-card, .entry, .chip-list li, .lab
 
 const certificateRecords = {
   bachelor: {
-    title: "Bachelor Completion Record",
-    meta: "Civil Engineering · 2026",
-    description: "A public summary of Samrita's four-year Civil Engineering completion record. Private registration numbers and personal identifiers are intentionally not shown.",
+    title: "Bachelor's Degree in Civil Engineering",
+    meta: "Madan Bhandari Memorial Academy Nepal - 2022 to 2026",
+    description: "A recruiter-facing summary of Samrita's Civil Engineering study. The bachelor result is still pending, so the profile avoids claiming a final GPA or transcript until the college publishes the result.",
     image: "",
     rows: [
       ["Program", "Bachelor's Degree in Civil Engineering"],
       ["College", "Madan Bhandari Memorial Academy Nepal"],
-      ["Status", "Completed"],
+      ["Status", "Four-year study completed"],
       ["Result", "Yet to be finalized"],
-      ["Focus", "Surveying, estimation, construction materials, structural fundamentals"],
-      ["Public note", "Detailed document available on request"]
+      ["Relevant areas", "Surveying, estimation, construction materials, structural fundamentals, site documentation"],
+      ["Recruiter note", "Final transcript can be added after official publication"]
     ]
   },
   autocad: {
@@ -241,6 +241,44 @@ const certificateRecords = {
       ["Use", "Academic and conduct verification"],
       ["Public note", "Document preview included by request"]
     ]
+  },
+  plusTwoGroup: {
+    title: "Higher Secondary Education (+2), Science",
+    meta: "Moonlight Secondary School - 2020 to 2021",
+    description: "Grouped +2 Science verification. This combines Grade 11, Grade 12, provisional, and conduct records so employers can verify the academic foundation without reading repeated certificate cards.",
+    rows: [
+      ["Institution", "Moonlight Secondary School"],
+      ["Location", "Kumaripati, Lalitpur"],
+      ["Stream", "Science"],
+      ["Grade 11 GPA", "3.72"],
+      ["Grade 12 GPA", "3.64"],
+      ["Verification set", "Grade 11 marksheet, Grade 12 transcript, provisional certificate, character certificate"],
+      ["Privacy note", "Typed copy avoids exposing registration and symbol numbers"]
+    ],
+    images: [
+      { src: "assets/certificates/class-11-marksheet.jpeg", label: "Grade 11 Marksheet", alt: "Grade 11 Science marksheet from Moonlight Secondary School" },
+      { src: "assets/certificates/class-12-marksheet.jpeg", label: "Grade 12 Transcript", alt: "Grade 12 NEB transcript from Moonlight Secondary School" },
+      { src: "assets/certificates/provisional-certificate.jpeg", label: "Provisional Certificate", alt: "Higher secondary provisional certificate" },
+      { src: "assets/certificates/plus-two-character-certificate.jpeg", label: "+2 Character Certificate", alt: "Moonlight Secondary School character certificate" }
+    ]
+  },
+  seeGroup: {
+    title: "Secondary Education Examination (SEE)",
+    meta: "Adarsha Saula Yubak Secondary School - 2019",
+    description: "Grouped SEE verification. This presents the secondary education record as one proof set, which is easier for recruiters to scan and more authentic than listing every school document as a separate achievement.",
+    rows: [
+      ["Institution", "Adarsha Saula Yubak Secondary School"],
+      ["Location", "Sainbu Bungamati, Lalitpur"],
+      ["Board", "National Examinations Board"],
+      ["Result", "GPA 3.55"],
+      ["Verification set", "SEE certificate, grade sheet, character certificate"],
+      ["Privacy note", "Typed copy avoids exposing serial, registration, and symbol numbers"]
+    ],
+    images: [
+      { src: "assets/certificates/slc-character.jpeg", label: "SEE Certificate", alt: "SEE completion certificate" },
+      { src: "assets/certificates/slc-marksheet.jpeg", label: "SEE Grade Sheet", alt: "SEE grade sheet from National Examinations Board" },
+      { src: "assets/certificates/slc-character-certificate.jpeg", label: "SEE Character Certificate", alt: "SEE character certificate from Adarsha Saula Yubak Secondary School" }
+    ]
   }
 };
 
@@ -253,9 +291,15 @@ const openCertificateModal = (key, trigger) => {
   modalTitle.textContent = record.title;
   modalMeta.textContent = record.meta;
   modalDescription.textContent = record.description;
-  const imageMarkup = record.image
-    ? `<img class="modal-document" src="${record.image}" alt="${record.title} document preview" loading="lazy">`
-    : "";
+  const images = record.images || (record.image ? [{ src: record.image, label: record.title, alt: `${record.title} document preview` }] : []);
+  const imageMarkup = images
+    .map((image) => `
+      <figure class="modal-document-frame">
+        <img class="modal-document" src="${image.src}" alt="${image.alt}" loading="lazy">
+        <figcaption>${image.label}</figcaption>
+      </figure>
+    `)
+    .join("");
   modalPreview.innerHTML = record.rows
     .map(([label, value]) => `<div class="modal-preview-row"><span>${label}</span><strong>${value}</strong></div>`)
     .join("") + imageMarkup;

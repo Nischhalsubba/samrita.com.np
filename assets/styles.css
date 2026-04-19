@@ -855,6 +855,18 @@ textarea {
   padding-bottom: 0;
 }
 
+.modal-document-frame {
+  min-width: 0;
+  margin: 0;
+}
+
+.modal-document-frame figcaption {
+  margin-top: 0.5rem;
+  color: var(--neutral-light);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
 .modal-document {
   display: block;
   width: 100%;

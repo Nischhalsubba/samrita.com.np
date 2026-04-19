@@ -131,6 +131,24 @@ document.querySelectorAll("a, button, .project-card, .entry, .chip-list li, .lab
   element.addEventListener("pointerleave", () => element.classList.remove("tap-active"));
 });
 
+document.querySelectorAll("[data-filter-group]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const group = button.dataset.filterGroup;
+    const filter = button.dataset.filter;
+    const list = document.querySelector(`[data-filter-list="${group}"]`);
+
+    document.querySelectorAll(`[data-filter-group="${group}"]`).forEach((item) => {
+      item.classList.toggle("is-active", item === button);
+      item.setAttribute("aria-pressed", String(item === button));
+    });
+
+    list?.querySelectorAll("[data-filter-item]").forEach((item) => {
+      const categories = (item.dataset.category || "").split(" ");
+      item.classList.toggle("is-hidden", filter !== "all" && !categories.includes(filter));
+    });
+  });
+});
+
 const certificateRecords = {
   bachelor: {
     title: "Bachelor's Degree in Civil Engineering",

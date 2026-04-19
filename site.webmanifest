@@ -3,7 +3,7 @@
   "short_name": "Samrita",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f6f2",
-  "theme_color": "#426b5a",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
   "description": "Civil engineering graduate portfolio for entry-level job opportunities."
 }

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600" role="img" aria-labelledby="title desc">
+  <title id="title">Civil engineering site readiness illustration</title>
+  <desc id="desc">A minimal monochrome construction drawing with grid lines, columns, and site notes.</desc>
+  <rect width="900" height="600" fill="#111"/>
+  <path d="M80 480h740M140 420h620M200 360h500M260 300h380" stroke="#4f4f4f" stroke-width="2"/>
+  <path d="M210 480V220h84v260M408 480V150h84v330M606 480V260h84v220" fill="none" stroke="#f2f2f2" stroke-width="3"/>
+  <path d="M140 220h620M180 150h540M220 260h460" stroke="#858585" stroke-width="2"/>
+  <circle cx="210" cy="220" r="8" fill="#f2f2f2"/>
+  <circle cx="492" cy="150" r="8" fill="#f2f2f2"/>
+  <circle cx="690" cy="260" r="8" fill="#f2f2f2"/>
+  <text x="80" y="105" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="38">Site Readiness</text>
+  <text x="80" y="146" fill="#bdbdbd" font-family="Inter, Arial, sans-serif" font-size="18">observation - safety - measurement - reporting</text>
+</svg>

@@ -5,6 +5,12 @@ const menuToggle = document.querySelector("[data-menu-toggle]");
 const header = document.querySelector(".site-header");
 const cursor = document.querySelector("[data-cursor]");
 const contactForm = document.querySelector("[data-contact-form]");
+const certificateModal = document.querySelector("[data-certificate-modal]");
+const modalClose = document.querySelector("[data-modal-close]");
+const modalTitle = document.querySelector("#certificate-title");
+const modalMeta = document.querySelector("[data-modal-meta]");
+const modalDescription = document.querySelector("[data-modal-description]");
+const modalPreview = document.querySelector("[data-modal-preview]");
 
 body.classList.add("is-loading");
 
@@ -41,6 +47,43 @@ const updateHeader = () => {
 updateHeader();
 window.addEventListener("scroll", updateHeader, { passive: true });
 
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (window.gsap && !reduceMotion) {
+  if (window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
+  gsap.set(".hero-bg, .footer-bg", { rotation: 45, transformOrigin: "50% 50%" });
+
+  if (window.ScrollTrigger) {
+    gsap.to(".hero-bg", {
+      rotation: 135,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    gsap.to(".footer-bg", {
+      rotation: 135,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "footer",
+        start: "top bottom",
+        end: "bottom bottom",
+        scrub: true
+      }
+    });
+  }
+
+  gsap.from(".site-header", { y: -24, opacity: 0, duration: 0.7, ease: "power2.out" });
+  gsap.from(".hero-text > *", { y: 24, opacity: 0, duration: 0.7, stagger: 0.08, ease: "power2.out", delay: 0.1 });
+}
+
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -64,6 +107,125 @@ document.querySelectorAll("a, button, .project-card, .entry, .chip-list li, .lab
   element.addEventListener("pointerup", () => element.classList.remove("tap-active"));
   element.addEventListener("pointercancel", () => element.classList.remove("tap-active"));
   element.addEventListener("pointerleave", () => element.classList.remove("tap-active"));
+});
+
+const certificateRecords = {
+  bachelor: {
+    title: "Bachelor Completion Record",
+    meta: "Civil Engineering · 2026",
+    description: "A public summary of Samrita's four-year Civil Engineering completion record. Private registration numbers and personal identifiers are intentionally not shown.",
+    rows: [
+      ["Program", "Bachelor's Degree in Civil Engineering"],
+      ["Status", "Completed"],
+      ["Focus", "Surveying, estimation, construction materials, structural fundamentals"],
+      ["Public note", "Detailed document available on request"]
+    ]
+  },
+  autocad: {
+    title: "AutoCAD Drafting Practice",
+    meta: "Technical Record · 2026",
+    description: "A practical drafting record for basic plan interpretation and civil drawing preparation.",
+    rows: [
+      ["Skill area", "2D drafting and plan reading"],
+      ["Tools", "AutoCAD practice workflow"],
+      ["Outputs", "Simple plans, drawing organization, annotation practice"],
+      ["Public note", "Portfolio summary only"]
+    ]
+  },
+  see: {
+    title: "SEE Certificate",
+    meta: "Secondary Education · 2019",
+    description: "Secondary Education Examination completion summary from Adarsha Saula Yubak Secondary School.",
+    rows: [
+      ["Institution", "Adarsha Saula Yubak Secondary School"],
+      ["Location", "Sainbu Bungamati, Lalitpur"],
+      ["Result", "GPA 3.55"],
+      ["Public note", "Serial and registration details hidden"]
+    ]
+  },
+  grade11: {
+    title: "Grade 11 Marksheet",
+    meta: "Science Stream · 2020",
+    description: "Grade 11 Science marksheet summary from Moonlight Secondary School.",
+    rows: [
+      ["Institution", "Moonlight Secondary School"],
+      ["Location", "Kumaripati, Lalitpur"],
+      ["Result", "GPA 3.72"],
+      ["Public note", "Subject-level document available on request"]
+    ]
+  },
+  grade12: {
+    title: "Grade 12 Transcript",
+    meta: "NEB Science Stream · 2021",
+    description: "Grade 12 transcript summary from the National Examination Board.",
+    rows: [
+      ["Institution", "Moonlight Secondary School"],
+      ["Board", "National Examination Board"],
+      ["Result", "GPA 3.64"],
+      ["Public note", "Registration and symbol details hidden"]
+    ]
+  },
+  provisional: {
+    title: "Provisional Certificate",
+    meta: "Higher Secondary Completion · 2021",
+    description: "Provisional certificate summary confirming completion of higher secondary Science requirements.",
+    rows: [
+      ["Level", "+2 Science"],
+      ["Status", "Completed"],
+      ["Use", "Academic transition and verification"],
+      ["Public note", "Private identifiers hidden"]
+    ]
+  }
+};
+
+const openCertificateModal = (key) => {
+  const record = certificateRecords[key];
+  if (!record || !certificateModal) {
+    return;
+  }
+
+  modalTitle.textContent = record.title;
+  modalMeta.textContent = record.meta;
+  modalDescription.textContent = record.description;
+  modalPreview.innerHTML = record.rows
+    .map(([label, value]) => `<div class="modal-preview-row"><span>${label}</span><strong>${value}</strong></div>`)
+    .join("");
+
+  certificateModal.classList.add("is-open");
+  certificateModal.setAttribute("aria-hidden", "false");
+  body.classList.add("menu-open");
+  modalClose?.focus();
+
+  if (window.gsap) {
+    gsap.fromTo(".modal-panel", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: "power2.out" });
+  }
+};
+
+const closeCertificateModal = () => {
+  if (!certificateModal) {
+    return;
+  }
+
+  certificateModal.classList.remove("is-open");
+  certificateModal.setAttribute("aria-hidden", "true");
+  body.classList.remove("menu-open");
+};
+
+document.querySelectorAll("[data-certificate]").forEach((trigger) => {
+  trigger.addEventListener("click", () => openCertificateModal(trigger.dataset.certificate));
+});
+
+modalClose?.addEventListener("click", closeCertificateModal);
+certificateModal?.addEventListener("click", (event) => {
+  if (event.target === certificateModal) {
+    closeCertificateModal();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeCertificateModal();
+  }
 });
 
 if (cursor && window.matchMedia("(pointer: fine)").matches) {

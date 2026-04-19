@@ -387,7 +387,7 @@ if (cursor && window.matchMedia("(pointer: fine)").matches) {
   });
 }
 
-contactForm?.addEventListener("submit", (event) => {
+contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const message = contactForm.querySelector("[data-form-message]");
@@ -420,11 +420,28 @@ contactForm?.addEventListener("submit", (event) => {
   message.textContent = "Submitting your message...";
   message.className = "form-message";
 
-  window.setTimeout(() => {
+  try {
+    const response = await fetch(contactForm.action, {
+      method: contactForm.method || "POST",
+      body: new FormData(contactForm),
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Form submission failed");
+    }
+
     button.disabled = false;
     button.textContent = originalButtonText;
-    message.textContent = "Thank you! Your submission has been received.";
+    message.textContent = "Thank you. Your message has been sent.";
     message.className = "form-message success";
     contactForm.reset();
-  }, 700);
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = originalButtonText;
+    message.textContent = "Sorry, the message could not be sent. Please email Samrita directly.";
+    message.className = "form-message error";
+  }
 });

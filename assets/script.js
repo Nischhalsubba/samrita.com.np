@@ -9,8 +9,7 @@ const contactForm = document.querySelector("[data-contact-form]");
 body.classList.add("is-loading");
 
 const storedTheme = localStorage.getItem("theme");
-const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-root.dataset.theme = storedTheme || preferredTheme;
+root.dataset.theme = storedTheme || "dark";
 
 window.addEventListener("load", () => {
   body.classList.remove("is-loading");

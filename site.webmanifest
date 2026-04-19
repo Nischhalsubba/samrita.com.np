@@ -1,0 +1,9 @@
+{
+  "name": "Samrita Academic Profile",
+  "short_name": "Samrita",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#426b5a",
+  "description": "Academic profile for Samrita from Lalitpur."
+}

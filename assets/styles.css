@@ -290,6 +290,61 @@ textarea {
 }
 
 .menu-toggle {
+  position: relative;
+  display: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--neutral-dark);
+  border-radius: 100px;
+  background: var(--neutral-darker);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.menu-lines,
+.menu-lines::before,
+.menu-lines::after {
+  display: block;
+  width: 1.1rem;
+  height: 1px;
+  background: currentColor;
+  transition: transform 240ms var(--ease), opacity 240ms var(--ease);
+}
+
+.menu-lines {
+  position: relative;
+}
+
+.menu-lines::before,
+.menu-lines::after {
+  position: absolute;
+  left: 0;
+  content: "";
+}
+
+.menu-lines::before {
+  transform: translateY(-0.35rem);
+}
+
+.menu-lines::after {
+  transform: translateY(0.35rem);
+}
+
+.menu-open .menu-lines {
+  background: transparent;
+}
+
+.menu-open .menu-lines::before {
+  transform: rotate(45deg);
+}
+
+.menu-open .menu-lines::after {
+  transform: rotate(-45deg);
+}
+
+.mobile-menu {
   display: none;
 }
 
@@ -731,7 +786,7 @@ textarea {
 .modal-panel {
   position: relative;
   width: min(100%, 36rem);
-  max-height: min(82vh, 44rem);
+  max-height: min(84vh, 44rem);
   overflow: auto;
   border: 1px solid var(--neutral-dark);
   background: var(--bg);
@@ -779,6 +834,16 @@ textarea {
 .modal-preview-row:last-child {
   border-bottom: 0;
   padding-bottom: 0;
+}
+
+.modal-document {
+  display: block;
+  width: 100%;
+  max-height: 58vh;
+  margin-top: 1rem;
+  border: 1px solid var(--neutral-darker);
+  object-fit: contain;
+  background: var(--neutral-darker);
 }
 
 .project-card:hover::before,
@@ -1167,6 +1232,44 @@ textarea.field {
     display: none;
   }
 
+  .menu-toggle {
+    display: flex;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 5rem;
+    right: 0;
+    left: 0;
+    z-index: 98;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--neutral-darker);
+    border-bottom: 1px solid var(--neutral-darker);
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-0.75rem);
+    transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+  }
+
+  .menu-open .mobile-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mobile-menu-link {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--neutral-darker);
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .mobile-menu-link:last-child {
+    border-bottom: 0;
+  }
+
   .site-header,
   .nav {
     min-height: 5rem;
@@ -1203,6 +1306,24 @@ textarea.field {
   .bottom-wrap {
     flex-flow: column;
     gap: 0.5rem;
+  }
+
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-panel {
+    width: 100%;
+    max-height: 88vh;
+    padding: 1.25rem;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+  }
+
+  .modal-document {
+    max-height: 52vh;
   }
 }
 

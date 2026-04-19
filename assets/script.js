@@ -11,6 +11,7 @@ const modalTitle = document.querySelector("#certificate-title");
 const modalMeta = document.querySelector("[data-modal-meta]");
 const modalDescription = document.querySelector("[data-modal-description]");
 const modalPreview = document.querySelector("[data-modal-preview]");
+let lastModalTrigger = null;
 
 body.classList.add("is-loading");
 
@@ -34,6 +35,13 @@ menuToggle?.addEventListener("click", () => {
 });
 
 document.querySelectorAll(".nav-link").forEach((link) => {
+  link.addEventListener("click", () => {
+    body.classList.remove("menu-open");
+    menuToggle?.setAttribute("aria-expanded", "false");
+  });
+});
+
+document.querySelectorAll(".mobile-menu-link").forEach((link) => {
   link.addEventListener("click", () => {
     body.classList.remove("menu-open");
     menuToggle?.setAttribute("aria-expanded", "false");
@@ -114,9 +122,12 @@ const certificateRecords = {
     title: "Bachelor Completion Record",
     meta: "Civil Engineering · 2026",
     description: "A public summary of Samrita's four-year Civil Engineering completion record. Private registration numbers and personal identifiers are intentionally not shown.",
+    image: "",
     rows: [
       ["Program", "Bachelor's Degree in Civil Engineering"],
+      ["College", "Madan Bhandari Memorial Academy Nepal"],
       ["Status", "Completed"],
+      ["Result", "Yet to be finalized"],
       ["Focus", "Surveying, estimation, construction materials, structural fundamentals"],
       ["Public note", "Detailed document available on request"]
     ]
@@ -125,6 +136,7 @@ const certificateRecords = {
     title: "AutoCAD Drafting Practice",
     meta: "Technical Record · 2026",
     description: "A practical drafting record for basic plan interpretation and civil drawing preparation.",
+    image: "",
     rows: [
       ["Skill area", "2D drafting and plan reading"],
       ["Tools", "AutoCAD practice workflow"],
@@ -136,6 +148,7 @@ const certificateRecords = {
     title: "SEE Certificate",
     meta: "Secondary Education · 2019",
     description: "Secondary Education Examination completion summary from Adarsha Saula Yubak Secondary School.",
+    image: "assets/certificates/slc-character.jpeg",
     rows: [
       ["Institution", "Adarsha Saula Yubak Secondary School"],
       ["Location", "Sainbu Bungamati, Lalitpur"],
@@ -143,10 +156,35 @@ const certificateRecords = {
       ["Public note", "Serial and registration details hidden"]
     ]
   },
+  seeMarksheet: {
+    title: "SEE Marksheet",
+    meta: "Secondary Education · 2019",
+    description: "SEE grade-sheet summary from the National Examinations Board.",
+    image: "assets/certificates/slc-marksheet.jpeg",
+    rows: [
+      ["Institution", "Adarsha Saula Yubak Secondary School"],
+      ["Board", "National Examinations Board"],
+      ["Result", "GPA 3.55"],
+      ["Public note", "Private identifiers hidden in typed copy"]
+    ]
+  },
+  seeCharacter: {
+    title: "SEE Character Certificate",
+    meta: "School Record · 2019",
+    description: "Character certificate summary issued by Adarsha Saula Yubak Secondary School.",
+    image: "assets/certificates/slc-character-certificate.jpeg",
+    rows: [
+      ["Institution", "Adarsha Saula Yubak Secondary School"],
+      ["Level", "SEE"],
+      ["Use", "Academic and conduct verification"],
+      ["Public note", "Document preview included by request"]
+    ]
+  },
   grade11: {
     title: "Grade 11 Marksheet",
     meta: "Science Stream · 2020",
     description: "Grade 11 Science marksheet summary from Moonlight Secondary School.",
+    image: "assets/certificates/class-11-marksheet.jpeg",
     rows: [
       ["Institution", "Moonlight Secondary School"],
       ["Location", "Kumaripati, Lalitpur"],
@@ -158,6 +196,7 @@ const certificateRecords = {
     title: "Grade 12 Transcript",
     meta: "NEB Science Stream · 2021",
     description: "Grade 12 transcript summary from the National Examination Board.",
+    image: "assets/certificates/class-12-marksheet.jpeg",
     rows: [
       ["Institution", "Moonlight Secondary School"],
       ["Board", "National Examination Board"],
@@ -169,16 +208,29 @@ const certificateRecords = {
     title: "Provisional Certificate",
     meta: "Higher Secondary Completion · 2021",
     description: "Provisional certificate summary confirming completion of higher secondary Science requirements.",
+    image: "assets/certificates/provisional-certificate.jpeg",
     rows: [
       ["Level", "+2 Science"],
       ["Status", "Completed"],
       ["Use", "Academic transition and verification"],
       ["Public note", "Private identifiers hidden"]
     ]
+  },
+  plusTwoCharacter: {
+    title: "+2 Character Certificate",
+    meta: "Higher Secondary School Record · 2021",
+    description: "Character certificate summary from Moonlight Secondary School.",
+    image: "assets/certificates/plus-two-character-certificate.jpeg",
+    rows: [
+      ["Institution", "Moonlight Secondary School"],
+      ["Level", "+2 Science"],
+      ["Use", "Academic and conduct verification"],
+      ["Public note", "Document preview included by request"]
+    ]
   }
 };
 
-const openCertificateModal = (key) => {
+const openCertificateModal = (key, trigger) => {
   const record = certificateRecords[key];
   if (!record || !certificateModal) {
     return;
@@ -187,10 +239,14 @@ const openCertificateModal = (key) => {
   modalTitle.textContent = record.title;
   modalMeta.textContent = record.meta;
   modalDescription.textContent = record.description;
+  const imageMarkup = record.image
+    ? `<img class="modal-document" src="${record.image}" alt="${record.title} document preview" loading="lazy">`
+    : "";
   modalPreview.innerHTML = record.rows
     .map(([label, value]) => `<div class="modal-preview-row"><span>${label}</span><strong>${value}</strong></div>`)
-    .join("");
+    .join("") + imageMarkup;
 
+  lastModalTrigger = trigger || document.activeElement;
   certificateModal.classList.add("is-open");
   certificateModal.setAttribute("aria-hidden", "false");
   body.classList.add("menu-open");
@@ -209,10 +265,11 @@ const closeCertificateModal = () => {
   certificateModal.classList.remove("is-open");
   certificateModal.setAttribute("aria-hidden", "true");
   body.classList.remove("menu-open");
+  lastModalTrigger?.focus?.();
 };
 
 document.querySelectorAll("[data-certificate]").forEach((trigger) => {
-  trigger.addEventListener("click", () => openCertificateModal(trigger.dataset.certificate));
+  trigger.addEventListener("click", () => openCertificateModal(trigger.dataset.certificate, trigger));
 });
 
 modalClose?.addEventListener("click", closeCertificateModal);

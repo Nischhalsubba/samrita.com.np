@@ -651,6 +651,51 @@ textarea {
   flex: 1;
 }
 
+.snapshot-grid,
+.faq-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.snapshot-item,
+.faq-item {
+  border-top: 1px solid var(--neutral-dark);
+  padding-top: 1rem;
+}
+
+.snapshot-item {
+  display: grid;
+  grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
+  gap: 1.5rem;
+}
+
+.snapshot-item span {
+  color: var(--neutral-light);
+  font-size: 0.875rem;
+}
+
+.snapshot-item strong {
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.faq-item {
+  color: var(--text);
+}
+
+.faq-item summary {
+  color: var(--white);
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+.faq-item p {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
 .skill-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1433,6 +1478,11 @@ textarea.field {
 
   .project-grid {
     grid-template-columns: 1fr;
+  }
+
+  .snapshot-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .project-card {

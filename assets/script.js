@@ -2,11 +2,12 @@ const root = document.documentElement;
 const body = document.body;
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
-const header = document.querySelector(".site-header");
+const header = document.querySelector("[data-header], .site-header");
+const progress = document.querySelector("[data-progress]");
 const cursor = document.querySelector("[data-cursor]");
 const contactForm = document.querySelector("[data-contact-form]");
+const formStatus = document.querySelector("[data-form-status]");
 const certificateModal = document.querySelector("[data-certificate-modal]");
-const modalClose = document.querySelector("[data-modal-close]");
 const modalTitle = document.querySelector("#certificate-title");
 const modalMeta = document.querySelector("[data-modal-meta]");
 const modalDescription = document.querySelector("[data-modal-description]");
@@ -14,12 +15,15 @@ const modalPreview = document.querySelector("[data-modal-preview]");
 let lastModalTrigger = null;
 
 body.classList.add("is-loading");
-
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const storedTheme = localStorage.getItem("theme");
-root.dataset.theme = storedTheme || "dark";
+root.dataset.theme = storedTheme || root.dataset.theme || "dark";
 
 window.addEventListener("load", () => {
   body.classList.remove("is-loading");
+  document.querySelectorAll(".reveal").forEach((el, index) => {
+    el.style.transitionDelay = `${Math.min(index * 35, 260)}ms`;
+  });
 });
 
 themeToggle?.addEventListener("click", () => {
@@ -34,236 +38,103 @@ menuToggle?.addEventListener("click", () => {
   menuToggle.setAttribute("aria-expanded", String(isOpen));
 });
 
-document.querySelectorAll(".nav-link").forEach((link) => {
+document.querySelectorAll("a[href^='#'], .mobile-menu-link, .nav-link").forEach((link) => {
   link.addEventListener("click", () => {
     body.classList.remove("menu-open");
     menuToggle?.setAttribute("aria-expanded", "false");
   });
 });
 
-document.querySelectorAll(".mobile-menu-link").forEach((link) => {
-  link.addEventListener("click", () => {
-    body.classList.remove("menu-open");
-    menuToggle?.setAttribute("aria-expanded", "false");
-  });
-});
-
-const updateHeader = () => {
-  header?.classList.toggle("scrolled", window.scrollY > 8);
+const updateScrollUI = () => {
+  header?.classList.toggle("scrolled", window.scrollY > 12);
+  if (progress) {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = `${max > 0 ? (window.scrollY / max) * 100 : 0}%`;
+  }
 };
+updateScrollUI();
+window.addEventListener("scroll", updateScrollUI, { passive: true });
 
-updateHeader();
-window.addEventListener("scroll", updateHeader, { passive: true });
+if (cursor && matchMedia("(pointer: fine)").matches) {
+  window.addEventListener("pointermove", (event) => {
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+  }, { passive: true });
 
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-if (window.gsap && !reduceMotion) {
-  if (window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-  }
-
-  gsap.set(".hero-bg, .footer-bg", { rotation: 45, transformOrigin: "50% 50%" });
-
-  if (window.ScrollTrigger) {
-    gsap.to(".hero-bg", {
-      rotation: 135,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-
-    gsap.to(".footer-bg", {
-      rotation: 135,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "footer",
-        start: "top bottom",
-        end: "bottom bottom",
-        scrub: true
-      }
-    });
-  }
-
-  gsap.from(".site-header", { y: -24, opacity: 0, duration: 0.7, ease: "power2.out" });
-  gsap.from(".hero-text > *", { y: 24, opacity: 0, duration: 0.7, stagger: 0.08, ease: "power2.out", delay: 0.1 });
+  document.querySelectorAll("a, button, input, textarea, summary").forEach((element) => {
+    element.addEventListener("pointerenter", () => cursor.classList.add("is-active"));
+    element.addEventListener("pointerleave", () => cursor.classList.remove("is-active"));
+  });
 }
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        if (window.gsap && !reduceMotion) {
-          gsap.to(entry.target, {
-            opacity: 1,
-            y: 0,
-            duration: 0.65,
-            ease: "power2.out",
-            overwrite: true
-          });
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.add("is-visible");
-        }
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.12 }
-);
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
 
-document.querySelectorAll(".reveal").forEach((element, index) => {
-  const isMobile = window.matchMedia("(max-width: 760px)").matches;
-  element.style.transitionDelay = `${Math.min(index * (isMobile ? 32 : 45), isMobile ? 150 : 220)}ms`;
-  if (window.gsap && !reduceMotion) {
-    gsap.set(element, { opacity: 0, y: element.classList.contains("hero-text") ? 48 : 24 });
+if (window.gsap && !reduceMotion) {
+  if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  gsap.from(".site-header", { y: -30, opacity: 0, duration: 0.8, ease: "power3.out" });
+  gsap.from(".hero-text > *, .hero-copy > *", { y: 36, opacity: 0, duration: 0.8, stagger: 0.08, ease: "power3.out", delay: 0.15 });
+  gsap.from(".hero-card", { y: 48, opacity: 0, rotate: -2, duration: 0.9, ease: "power3.out", delay: 0.35 });
+
+  if (window.ScrollTrigger) {
+    gsap.utils.toArray("[data-parallax]").forEach((element) => {
+      const speed = Number(element.dataset.speed || 0.1);
+      gsap.to(element, {
+        yPercent: speed * 100,
+        ease: "none",
+        scrollTrigger: { trigger: element.parentElement || body, scrub: true }
+      });
+    });
+
+    gsap.utils.toArray(".project-card, .skill-card, .record-card, .snapshot-item, .entry").forEach((card) => {
+      gsap.to(card, {
+        y: -10,
+        ease: "none",
+        scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
   }
-  observer.observe(element);
-});
+}
 
-document.querySelectorAll("a, button, .project-card, .entry, .chip-list li, .label-list li").forEach((element) => {
-  element.addEventListener("pointerdown", () => element.classList.add("tap-active"));
-  element.addEventListener("pointerup", () => element.classList.remove("tap-active"));
-  element.addEventListener("pointercancel", () => element.classList.remove("tap-active"));
-  element.addEventListener("pointerleave", () => element.classList.remove("tap-active"));
-});
-
-document.querySelectorAll("[data-filter-group]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const group = button.dataset.filterGroup;
-    const filter = button.dataset.filter;
-    const list = document.querySelector(`[data-filter-list="${group}"]`);
-
-    document.querySelectorAll(`[data-filter-group="${group}"]`).forEach((item) => {
-      item.classList.toggle("is-active", item === button);
-      item.setAttribute("aria-pressed", String(item === button));
-    });
-
-    list?.querySelectorAll("[data-filter-item]").forEach((item) => {
-      const categories = (item.dataset.category || "").split(" ");
-      item.classList.toggle("is-hidden", filter !== "all" && !categories.includes(filter));
-    });
+document.querySelectorAll(".magnetic, .button, .social-icon, .arrow-button, .theme-toggle, .record-card, .project-card, .entry").forEach((element) => {
+  if (reduceMotion || !matchMedia("(pointer: fine)").matches) return;
+  element.addEventListener("pointermove", (event) => {
+    const rect = element.getBoundingClientRect();
+    const x = (event.clientX - rect.left - rect.width / 2) * 0.14;
+    const y = (event.clientY - rect.top - rect.height / 2) * 0.14;
+    element.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  element.addEventListener("pointerleave", () => {
+    element.style.transform = "";
   });
 });
 
 const certificateRecords = {
   bachelor: {
     title: "Bachelor's Degree in Civil Engineering",
-    meta: "Madan Bhandari Memorial Academy Nepal - 2022 to 2026",
-    description: "A recruiter-facing summary of Samrita's Civil Engineering study. The bachelor result is still pending, so the profile avoids claiming a final GPA or transcript until the college publishes the result.",
-    image: "",
+    meta: "Madan Bhandari Memorial Academy Nepal · 2022 to 2026",
+    description: "A recruiter-facing summary of Samrita's civil engineering study. The four-year study is presented carefully, while final official result details remain pending until publication.",
     rows: [
       ["Program", "Bachelor's Degree in Civil Engineering"],
       ["College", "Madan Bhandari Memorial Academy Nepal"],
       ["Status", "Four-year study completed"],
-      ["Result", "Yet to be finalized"],
-      ["Relevant areas", "Surveying, estimation, construction materials, structural fundamentals, site documentation"],
+      ["Result", "Pending official publication"],
+      ["Relevant areas", "Surveying, quantity estimation, concrete technology, construction materials, drawing review, site documentation"],
       ["Recruiter note", "Final transcript can be added after official publication"]
-    ]
-  },
-  autocad: {
-    title: "AutoCAD Drafting Practice",
-    meta: "Technical Record · 2026",
-    description: "A practical drafting record for basic plan interpretation and civil drawing preparation.",
-    image: "",
-    rows: [
-      ["Skill area", "2D drafting and plan reading"],
-      ["Tools", "AutoCAD practice workflow"],
-      ["Outputs", "Simple plans, drawing organization, annotation practice"],
-      ["Public note", "Portfolio summary only"]
-    ]
-  },
-  see: {
-    title: "SEE Certificate",
-    meta: "Secondary Education · 2019",
-    description: "Secondary Education Examination completion summary from Adarsha Saula Yubak Secondary School.",
-    image: "assets/certificates/slc-character.jpeg",
-    rows: [
-      ["Institution", "Adarsha Saula Yubak Secondary School"],
-      ["Location", "Sainbu Bungamati, Lalitpur"],
-      ["Result", "GPA 3.55"],
-      ["Public note", "Serial and registration details hidden"]
-    ]
-  },
-  seeMarksheet: {
-    title: "SEE Marksheet",
-    meta: "Secondary Education · 2019",
-    description: "SEE grade-sheet summary from the National Examinations Board.",
-    image: "assets/certificates/slc-marksheet.jpeg",
-    rows: [
-      ["Institution", "Adarsha Saula Yubak Secondary School"],
-      ["Board", "National Examinations Board"],
-      ["Result", "GPA 3.55"],
-      ["Public note", "Private identifiers hidden in typed copy"]
-    ]
-  },
-  seeCharacter: {
-    title: "SEE Character Certificate",
-    meta: "School Record · 2019",
-    description: "Character certificate summary issued by Adarsha Saula Yubak Secondary School.",
-    image: "assets/certificates/slc-character-certificate.jpeg",
-    rows: [
-      ["Institution", "Adarsha Saula Yubak Secondary School"],
-      ["Level", "SEE"],
-      ["Use", "Academic and conduct verification"],
-      ["Public note", "Document preview included by request"]
-    ]
-  },
-  grade11: {
-    title: "Grade 11 Marksheet",
-    meta: "Science Stream · 2020",
-    description: "Grade 11 Science marksheet summary from Moonlight Secondary School.",
-    image: "assets/certificates/class-11-marksheet.jpeg",
-    rows: [
-      ["Institution", "Moonlight Secondary School"],
-      ["Location", "Kumaripati, Lalitpur"],
-      ["Result", "GPA 3.72"],
-      ["Public note", "Subject-level document available on request"]
-    ]
-  },
-  grade12: {
-    title: "Grade 12 Transcript",
-    meta: "NEB Science Stream · 2021",
-    description: "Grade 12 transcript summary from the National Examination Board.",
-    image: "assets/certificates/class-12-marksheet.jpeg",
-    rows: [
-      ["Institution", "Moonlight Secondary School"],
-      ["Board", "National Examination Board"],
-      ["Result", "GPA 3.64"],
-      ["Public note", "Registration and symbol details hidden"]
-    ]
-  },
-  provisional: {
-    title: "Provisional Certificate",
-    meta: "Higher Secondary Completion · 2021",
-    description: "Provisional certificate summary confirming completion of higher secondary Science requirements.",
-    image: "assets/certificates/provisional-certificate.jpeg",
-    rows: [
-      ["Level", "+2 Science"],
-      ["Status", "Completed"],
-      ["Use", "Academic transition and verification"],
-      ["Public note", "Private identifiers hidden"]
-    ]
-  },
-  plusTwoCharacter: {
-    title: "+2 Character Certificate",
-    meta: "Higher Secondary School Record · 2021",
-    description: "Character certificate summary from Moonlight Secondary School.",
-    image: "assets/certificates/plus-two-character-certificate.jpeg",
-    rows: [
-      ["Institution", "Moonlight Secondary School"],
-      ["Level", "+2 Science"],
-      ["Use", "Academic and conduct verification"],
-      ["Public note", "Document preview included by request"]
     ]
   },
   plusTwoGroup: {
     title: "Higher Secondary Education (+2), Science",
-    meta: "Moonlight Secondary School - 2020 to 2021",
-    description: "Grouped +2 Science verification. This combines Grade 11, Grade 12, provisional, and conduct records so employers can verify the academic foundation without reading repeated certificate cards.",
+    meta: "Moonlight Secondary School · 2020 to 2021",
+    description: "Grouped +2 Science verification, combining Grade 11, Grade 12, provisional, and conduct records so employers can review the academic foundation without repeated certificate cards.",
     rows: [
       ["Institution", "Moonlight Secondary School"],
       ["Location", "Kumaripati, Lalitpur"],
@@ -271,7 +142,7 @@ const certificateRecords = {
       ["Grade 11 GPA", "3.72"],
       ["Grade 12 GPA", "3.64"],
       ["Verification set", "Grade 11 marksheet, Grade 12 transcript, provisional certificate, character certificate"],
-      ["Privacy note", "Typed copy avoids exposing registration and symbol numbers"]
+      ["Privacy note", "Typed public copy avoids exposing registration and symbol numbers"]
     ],
     images: [
       { src: "assets/certificates/class-11-marksheet.jpeg", label: "Grade 11 Marksheet", alt: "Grade 11 Science marksheet from Moonlight Secondary School" },
@@ -282,15 +153,15 @@ const certificateRecords = {
   },
   seeGroup: {
     title: "Secondary Education Examination (SEE)",
-    meta: "Adarsha Saula Yubak Secondary School - 2019",
-    description: "Grouped SEE verification. This presents the secondary education record as one proof set, which is easier for recruiters to scan and more authentic than listing every school document as a separate achievement.",
+    meta: "Adarsha Saula Yubak Secondary School · 2019",
+    description: "Grouped SEE verification. This presents the secondary education record as one proof set, making it easier to scan while keeping sensitive identifiers out of the typed public copy.",
     rows: [
       ["Institution", "Adarsha Saula Yubak Secondary School"],
       ["Location", "Sainbu Bungamati, Lalitpur"],
       ["Board", "National Examinations Board"],
       ["Result", "GPA 3.55"],
       ["Verification set", "SEE certificate, grade sheet, character certificate"],
-      ["Privacy note", "Typed copy avoids exposing serial, registration, and symbol numbers"]
+      ["Privacy note", "Serial, registration, and symbol numbers are not typed publicly"]
     ],
     images: [
       { src: "assets/certificates/slc-character.jpeg", label: "SEE Certificate", alt: "SEE completion certificate" },
@@ -300,148 +171,71 @@ const certificateRecords = {
   }
 };
 
+const renderRows = (rows = []) => `
+  <table class="modal-table">
+    <tbody>${rows.map(([label, value]) => `<tr><th>${label}</th><td>${value}</td></tr>`).join("")}</tbody>
+  </table>
+`;
+
+const renderImages = (images = []) => images.map((image) => `
+  <figure class="modal-document-frame">
+    <img class="modal-document" src="${image.src}" alt="${image.alt}" loading="lazy">
+    <figcaption class="modal-caption">${image.label}</figcaption>
+  </figure>
+`).join("");
+
 const openCertificateModal = (key, trigger) => {
   const record = certificateRecords[key];
-  if (!record || !certificateModal) {
-    return;
-  }
+  if (!record || !certificateModal) return;
 
+  lastModalTrigger = trigger;
   modalTitle.textContent = record.title;
   modalMeta.textContent = record.meta;
   modalDescription.textContent = record.description;
-  const images = record.images || (record.image ? [{ src: record.image, label: record.title, alt: `${record.title} document preview` }] : []);
-  const imageMarkup = images
-    .map((image) => `
-      <figure class="modal-document-frame">
-        <img class="modal-document" src="${image.src}" alt="${image.alt}" loading="lazy">
-        <figcaption>${image.label}</figcaption>
-      </figure>
-    `)
-    .join("");
-  modalPreview.innerHTML = record.rows
-    .map(([label, value]) => `<div class="modal-preview-row"><span>${label}</span><strong>${value}</strong></div>`)
-    .join("") + imageMarkup;
-
-  lastModalTrigger = trigger || document.activeElement;
-  certificateModal.classList.add("is-open");
-  certificateModal.setAttribute("aria-hidden", "false");
-  body.classList.add("menu-open");
-  modalClose?.focus();
-
-  if (window.gsap) {
-    gsap.fromTo(".modal-panel", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: "power2.out" });
-  }
+  modalPreview.innerHTML = `${renderRows(record.rows)}${renderImages(record.images || [])}`;
+  certificateModal.hidden = false;
+  body.style.overflow = "hidden";
+  certificateModal.querySelector("[data-modal-close]")?.focus();
 };
 
 const closeCertificateModal = () => {
-  if (!certificateModal) {
-    return;
-  }
-
-  certificateModal.classList.remove("is-open");
-  certificateModal.setAttribute("aria-hidden", "true");
-  body.classList.remove("menu-open");
-  lastModalTrigger?.focus?.();
+  if (!certificateModal || certificateModal.hidden) return;
+  certificateModal.hidden = true;
+  body.style.overflow = "";
+  lastModalTrigger?.focus();
 };
 
-document.querySelectorAll("[data-certificate]").forEach((trigger) => {
-  trigger.addEventListener("click", () => openCertificateModal(trigger.dataset.certificate, trigger));
+document.querySelectorAll("[data-certificate]").forEach((button) => {
+  button.addEventListener("click", () => openCertificateModal(button.dataset.certificate, button));
 });
-
-modalClose?.addEventListener("click", closeCertificateModal);
-certificateModal?.addEventListener("click", (event) => {
-  if (event.target === certificateModal) {
-    closeCertificateModal();
-  }
+document.querySelectorAll("[data-modal-close]").forEach((button) => {
+  button.addEventListener("click", closeCertificateModal);
 });
-
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    closeCertificateModal();
-  }
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeCertificateModal();
 });
-
-if (cursor && window.matchMedia("(pointer: fine)").matches) {
-  let cursorX = window.innerWidth / 2;
-  let cursorY = window.innerHeight / 2;
-  let targetX = cursorX;
-  let targetY = cursorY;
-
-  window.addEventListener("mousemove", (event) => {
-    targetX = event.clientX;
-    targetY = event.clientY;
-  });
-
-  const renderCursor = () => {
-    cursorX += (targetX - cursorX) * 0.18;
-    cursorY += (targetY - cursorY) * 0.18;
-    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-    requestAnimationFrame(renderCursor);
-  };
-
-  renderCursor();
-
-  document.querySelectorAll("a, button, .project-card, .entry, input, textarea").forEach((item) => {
-    item.addEventListener("mouseenter", () => cursor.classList.add("active"));
-    item.addEventListener("mouseleave", () => cursor.classList.remove("active"));
-  });
-}
 
 contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!formStatus) return;
 
-  const message = contactForm.querySelector("[data-form-message]");
-  const button = contactForm.querySelector("button[type='submit']");
-  const requiredFields = Array.from(contactForm.querySelectorAll("[required]"));
-  let firstInvalid = null;
-
-  requiredFields.forEach((field) => {
-    const status = contactForm.querySelector(`[data-status-for="${field.name}"]`);
-    const invalid = !field.value.trim() || (field.type === "email" && !field.validity.valid);
-    field.classList.toggle("error", invalid);
-    if (status) {
-      status.textContent = invalid ? "Please complete this field." : "";
-    }
-    if (invalid && !firstInvalid) {
-      firstInvalid = field;
-    }
-  });
-
-  if (firstInvalid) {
-    message.textContent = "Oops! Please check the highlighted fields and try again.";
-    message.className = "form-message error";
-    firstInvalid.focus();
-    return;
-  }
-
-  button.disabled = true;
-  const originalButtonText = button.textContent;
-  button.textContent = "Please wait...";
-  message.textContent = "Submitting your message...";
-  message.className = "form-message";
+  formStatus.textContent = "Sending your message...";
+  formStatus.className = "form-status";
 
   try {
     const response = await fetch(contactForm.action, {
-      method: contactForm.method || "POST",
+      method: "POST",
       body: new FormData(contactForm),
-      headers: {
-        Accept: "application/json"
-      }
+      headers: { Accept: "application/json" }
     });
 
-    if (!response.ok) {
-      throw new Error("Form submission failed");
-    }
+    if (!response.ok) throw new Error("Form request failed");
 
-    button.disabled = false;
-    button.textContent = originalButtonText;
-    message.textContent = "Thank you. Your message has been sent.";
-    message.className = "form-message success";
     contactForm.reset();
+    formStatus.textContent = "Message sent. Thank you for reaching out.";
+    formStatus.classList.add("success");
   } catch (error) {
-    button.disabled = false;
-    button.textContent = originalButtonText;
-    message.textContent = "Sorry, the message could not be sent. Please email Samrita directly.";
-    message.className = "form-message error";
+    formStatus.textContent = "Message could not be sent right now. Please try again or email directly.";
+    formStatus.classList.add("error");
   }
 });

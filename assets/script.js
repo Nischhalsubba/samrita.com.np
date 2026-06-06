@@ -93,23 +93,17 @@ if (window.gsap && !reduceMotion) {
         scrollTrigger: { trigger: element.parentElement || body, scrub: true }
       });
     });
-
-    gsap.utils.toArray(".project-card, .skill-card, .record-card, .snapshot-item, .entry").forEach((card) => {
-      gsap.to(card, {
-        y: -10,
-        ease: "none",
-        scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true }
-      });
-    });
   }
 }
 
-document.querySelectorAll(".magnetic, .button, .social-icon, .arrow-button, .theme-toggle, .record-card, .project-card, .entry").forEach((element) => {
+// Keep hover stable. Only apply magnetic motion to non-card, non-header controls.
+document.querySelectorAll(".magnetic").forEach((element) => {
   if (reduceMotion || !matchMedia("(pointer: fine)").matches) return;
+  if (element.closest(".site-header") || element.matches(".record-card, .project-card, .entry, .skill-card, .snapshot-item, .metric-tile")) return;
   element.addEventListener("pointermove", (event) => {
     const rect = element.getBoundingClientRect();
-    const x = (event.clientX - rect.left - rect.width / 2) * 0.14;
-    const y = (event.clientY - rect.top - rect.height / 2) * 0.14;
+    const x = (event.clientX - rect.left - rect.width / 2) * 0.08;
+    const y = (event.clientY - rect.top - rect.height / 2) * 0.08;
     element.style.transform = `translate(${x}px, ${y}px)`;
   });
   element.addEventListener("pointerleave", () => {
@@ -239,3 +233,21 @@ contactForm?.addEventListener("submit", async (event) => {
     formStatus.classList.add("error");
   }
 });
+
+// SEO and AI-agent friendly copy updates. Static HTML remains readable; this improves visible copy without disrupting layout.
+const setText = (selector, text) => {
+  const element = document.querySelector(selector);
+  if (element) element.textContent = text;
+};
+setText(".hero-copy .eyebrow", "Junior Civil Engineer in Lalitpur, Nepal");
+setText(".heading-style-display", "Samrita Maharjan - Entry-Level Civil Engineer for Site, Surveying, AutoCAD and Estimation Support");
+setText(".hero-lede", "Civil engineering fresher based in Lalitpur, Nepal, prepared for junior site engineer, site assistant, AutoCAD drafting support, surveying assistance, quantity estimation, construction documentation, and daily site reporting roles.");
+setText(".hero-card h2", "Civil engineering profile summary");
+setText("#profile .section-head .heading-style-h2", "Junior civil engineer profile for Nepal-based site and office roles.");
+setText("#profile .section-head p:not(.eyebrow)", "This portfolio helps recruiters, contractors, site supervisors, and AI search agents quickly understand Samrita Maharjan's role fit, location, education, civil engineering skills, certificate proof, and contact path.");
+setText("#skills .section-head .heading-style-h2", "Civil engineering skills for site execution, documentation, drafting and estimation.");
+setText("#projects .section-head .heading-style-h2", "Civil engineering project notes that show practical thinking.");
+setText("#contact .section-head .heading-style-h2", "Contact Samrita Maharjan for junior civil engineering opportunities in Nepal.");
+const desc = document.querySelector('meta[name="description"]');
+if (desc) desc.setAttribute("content", "Samrita Maharjan is an entry-level Civil Engineer in Lalitpur, Nepal available for junior site engineer, site assistant, AutoCAD drafting support, surveying assistance, quantity estimation, construction documentation and site reporting roles.");
+document.title = "Samrita Maharjan | Junior Civil Engineer in Lalitpur, Nepal";

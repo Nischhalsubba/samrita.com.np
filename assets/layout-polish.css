@@ -1,0 +1,65 @@
+/* Layout polish: fixes contrast, spacing, letter-spacing, and unwanted scrollbars. */
+:root,[data-theme=dark],[data-theme=light]{
+  --bg:#f7f3ec;
+  --bg2:#eee7dc;
+  --surface:#fffaf2;
+  --surface2:#ece2d5;
+  --text:#24211e;
+  --muted:#5f574f;
+  --heading:#11100f;
+  --line:rgba(17,16,15,.18);
+  --line2:rgba(17,16,15,.34);
+}
+html,body{width:100%;max-width:100%;overflow-x:hidden;}
+body{background:linear-gradient(180deg,var(--bg),var(--bg2) 55%,var(--bg));}
+body:before{opacity:.09;background-size:8rem 8rem;}
+.container-large,.container{width:min(92rem,calc(100% - clamp(2rem,7vw,7rem)));}
+h1,h2,h3{letter-spacing:-.045em;line-height:1;}
+p{color:var(--text);}
+.section{padding-block:clamp(4.75rem,8vw,9rem);}
+.site-header{inset:1rem clamp(1rem,2.5vw,2rem) auto;}
+.nav{grid-template-columns:minmax(8rem,1fr) auto minmax(8rem,1fr);}
+.social-icons-wrapper,.logo-wrapper{background:rgba(255,250,242,.88);}
+.social-icon,.theme-toggle,.button,.arrow-button{background:rgba(255,250,242,.92);}
+.site-header .magnetic,.site-header .social-icon,.site-header .theme-toggle,.site-header .button,.social-icons-wrapper,.logo-wrapper{transform:none!important;}
+.social-icon:hover,.theme-toggle:hover,.button:hover,.arrow-button:hover{background:var(--heading);color:var(--bg);}
+.hero{min-height:92svh;padding-top:7.5rem;}
+.hero-layout{grid-template-columns:minmax(0,1fr) minmax(18rem,.42fr);gap:clamp(2rem,4vw,4rem);align-items:end;}
+.heading-style-display:before{max-width:10.5ch;font-size:clamp(4.4rem,12.8vw,12rem);line-height:.86;letter-spacing:-.085em;}
+.hero-lede{max-width:58rem;font-size:clamp(1.22rem,2.25vw,2.05rem);line-height:1.16;letter-spacing:-.035em;color:var(--text);}
+.hero-card h2{font-size:clamp(1.35rem,1.8vw,1.75rem);letter-spacing:-.04em;}
+.hero-list{color:var(--muted);}
+.dossier-card span,.metric-tile span,.snapshot-item span,.record-card span,.project-card span,.entry span{color:var(--muted);}
+.section-head,.heading-wrapper{grid-template-columns:minmax(7rem,.24fr) minmax(0,1fr);gap:clamp(1rem,3vw,3rem);margin-bottom:clamp(2rem,4.5vw,4rem);}
+.heading-style-h2{max-width:12.5ch;font-size:clamp(2.75rem,6.6vw,6.8rem);line-height:.9;letter-spacing:-.075em;}
+.section-head p:not(.eyebrow),.heading-wrapper p{max-width:48rem;color:var(--text);font-size:clamp(1rem,1.25vw,1.15rem);}
+.snapshot-grid,.card-grid.three,.skill-board,.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;width:100%;}
+.snapshot-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+.snapshot-item,.record-card,.skill-card,.metric-tile{min-height:11rem;padding:clamp(1rem,2vw,1.5rem);}
+.project-grid,.blog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;overflow:visible;padding-bottom:0;scroll-snap-type:none;}
+.project-card,.entry{flex:auto;min-height:22rem;width:auto;max-width:none;}
+.entry img{height:12rem;}
+.contact-layout{grid-template-columns:minmax(0,.95fr) minmax(20rem,.65fr);gap:clamp(2rem,4vw,4rem);}
+.footer-content h2{max-width:13ch;font-size:clamp(2.7rem,7vw,7rem);letter-spacing:-.075em;line-height:.9;}
+.proof-track span{font-size:clamp(1rem,1.7vw,1.45rem);letter-spacing:-.035em;}
+.reveal{transform:translateY(34px);transition:opacity .78s var(--ease),transform .78s var(--ease);}
+@media(max-width:1040px){
+  .snapshot-grid,.card-grid.three,.skill-board,.metric-grid,.project-grid,.blog-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:920px){
+  .container-large,.container{width:min(100% - 2rem,58rem);}
+  .hero-layout,.contact-layout{grid-template-columns:1fr;}
+  .section-head,.heading-wrapper{grid-template-columns:1fr;}
+  .section-head p:not(.eyebrow),.heading-wrapper p{grid-column:1;}
+  .heading-style-display:before{font-size:clamp(4rem,16vw,8rem);max-width:9.5ch;}
+}
+@media(max-width:760px){
+  .container-large,.container{width:calc(100% - 1.5rem);}
+  .section{padding-block:clamp(4rem,14vw,6.5rem);}
+  .hero{padding-top:6.8rem;}
+  .heading-style-display:before{font-size:clamp(3.5rem,18vw,6rem);letter-spacing:-.075em;}
+  .hero-lede{font-size:clamp(1.1rem,5.8vw,1.65rem);line-height:1.18;}
+  .heading-style-h2{font-size:clamp(2.45rem,12vw,4.3rem);}
+  .snapshot-grid,.card-grid.three,.skill-board,.metric-grid,.project-grid,.blog-grid{grid-template-columns:1fr;}
+  .project-card,.entry{min-height:19rem;}
+}

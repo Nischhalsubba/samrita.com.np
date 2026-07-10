@@ -1,0 +1,38 @@
+# Samrita Maharjan Civil Engineering Portfolio
+
+This website presents Samrita Maharjan as an entry-level Civil Engineer in Lalitpur, Nepal.
+
+## Professional direction
+
+- Junior Civil Engineer roles
+- Site coordination support
+- AutoCAD drafting support
+- Surveying assistance
+- Quantity estimation
+- Construction documentation
+- Site reporting and drawing review
+
+## Education
+
+- Bachelor's Degree in Civil Engineering, Madan Bhandari Memorial Academy Nepal, 2022-2026. Final official result is marked pending until publication.
+- Higher Secondary Education (+2), Science, Moonlight Secondary School, Kumaripati.
+- Secondary Education Examination, Adarsha Saula Yubak Secondary School, Sainbu Bungamati.
+
+## Portfolio principles
+
+- Claims are intentionally limited to entry-level capability.
+- Academic records are grouped for recruiter review.
+- Sensitive registration, symbol, and serial numbers are not published as searchable text.
+- The website does not claim senior-level experience, invented metrics, or fake testimonials.
+
+## Website
+
+https://samrita.com.np/
+
+## Repository
+
+https://github.com/Nischhalsubba/samrita.com.np
+
+## Contact and verification note
+
+Recruiters should verify education, certificates, availability, and role suitability directly with Samrita before making employment decisions. Public certificate previews should not be treated as substitutes for original documents or institutional verification.

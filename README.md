@@ -1,5 +1,90 @@
 # Samrita Maharjan Civil Engineering Portfolio
 
+<!-- interactive-readme-standard:start -->
+
+> [!NOTE]
+> **Branch-specific documentation:** this section is maintained for [`cloudflare/workers-autoconfig`](https://github.com/Nischhalsubba/samrita.com.np/tree/cloudflare/workers-autoconfig). It is generated from the files present on this branch and preserves the project-authored README below.
+
+<details open>
+<summary><strong>Interactive repository guide</strong></summary>
+
+## Branch overview
+
+| Item | Value |
+|---|---|
+| Repository | [`Nischhalsubba/samrita.com.np`](https://github.com/Nischhalsubba/samrita.com.np) |
+| Branch | [`cloudflare/workers-autoconfig`](https://github.com/Nischhalsubba/samrita.com.np/tree/cloudflare/workers-autoconfig) |
+| Detected stack | HTML, CSS, JavaScript |
+| Detected manifests | No standard manifest detected |
+| Documentation policy | Every maintained branch must explain purpose, setup, structure, architecture, flows, testing, delivery, security, and ownership. |
+
+## Repository structure
+
+```mermaid
+flowchart TD
+    ROOT["samrita.com.np / cloudflare/workers-autoconfig"]
+    ROOT --> P0["assets/"]
+    ROOT --> P1["blog/"]
+    ROOT --> P2["projects/"]
+    ROOT --> P3[".gitignore"]
+    ROOT --> P4["404.html"]
+    ROOT --> P5["changelog.html"]
+    ROOT --> P6["index.html"]
+    ROOT --> P7["licenses.html"]
+    ROOT --> P8["llms.txt"]
+    ROOT --> P9["password.html"]
+    ROOT --> P10["robots.txt"]
+    ROOT --> P11["site.webmanifest"]
+    ROOT --> P12["sitemap.xml"]
+    ROOT --> P13["start-here.html"]
+    ROOT --> P14["style-guide.html"]
+    ROOT --> P15["wrangler.jsonc"]
+```
+
+The diagram is generated from the branch's actual top-level files and directories. Use the branch link above for complete source navigation.
+
+## Website or application structure
+
+```mermaid
+flowchart TD
+    APP["samrita.com.np"]
+    APP --> SOURCE["No conventional route directory detected"]
+    SOURCE --> VERIFY["Inspect the project-specific documentation below"]
+```
+
+## Application and responsibility flow
+
+```mermaid
+flowchart LR
+    ACTOR["User / contributor"]
+    ACTOR --> A0["Project files: assets/, blog/, projects/, .gitignore, 404.html"]
+```
+
+## Change-to-delivery flow
+
+```mermaid
+flowchart LR
+    CHANGE["Change on cloudflare/workers-autoconfig"]
+    CHECK["Validate: Project-specific validation"]
+    REVIEW["Review documentation and architecture impact"]
+    RELEASE["Merge, release, or deploy according to this branch"]
+    CHANGE --> CHECK --> REVIEW --> RELEASE
+```
+
+## README requirements for this branch
+
+- Explain what this branch contains and how it differs from the default branch.
+- Keep installation, configuration, usage, testing, deployment, security, support, and license information accurate.
+- Document repository, website or application, API, data, authentication, background-job, and deployment flows when they exist.
+- Prefer Mermaid diagrams and expandable `<details>` sections for visual navigation.
+- Link diagrams and modules to real source paths; never invent missing components.
+- Preserve project-specific documentation and update diagrams whenever architecture or major paths change.
+- Treat secrets, private infrastructure, customer data, and credentials as prohibited README content.
+
+</details>
+
+<!-- interactive-readme-standard:end -->
+
 > A static, recruiter-focused civil engineering portfolio for **Samrita Maharjan** — designed as a calm, credible, privacy-conscious professional website for an entry-level Civil Engineer in Nepal.
 
 [![Static Site](https://img.shields.io/badge/Site-Static%20HTML%20%2B%20CSS%20%2B%20JS-111111?style=for-the-badge)](#development)

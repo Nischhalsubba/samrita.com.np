@@ -16,4 +16,4 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Verify site entry points
-        run: test -f site/index.html && test -d site/assets && test -f site/404.html
+        run: test -f index.html && test -d assets && test -f 404.html

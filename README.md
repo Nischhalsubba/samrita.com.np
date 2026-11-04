@@ -71,3 +71,7 @@ Use an accurate personal title and description, semantic headings, descriptive l
 flowchart LR
     UPDATE["Content / UI update"] --> VERIFY["Verify personal details"] --> BUILD["Implement"] --> REVIEW["Responsive + accessibility review"] --> SEO["Metadata / links check"] --> PR["Pull request"]
 ```
+
+## GitHub Pages publishing
+
+The static website is at repository root (`index.html`, `assets/`, `blog/`, `projects/`, `sitemap.xml`, and `robots.txt`). Configure **Settings → Pages → Deploy from a branch → main → / (root)**. The validation workflow verifies local asset links. The former nested-site guide lives at `docs/legacy-site-readme.md`.

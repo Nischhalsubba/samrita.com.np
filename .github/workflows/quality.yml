@@ -1,4 +1,4 @@
-name: Validate Samrita site
+name: Validate Samrita static site
 
 on:
   push:
@@ -15,5 +15,46 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Verify site entry points
-        run: test -f site/index.html && test -d site/assets && test -f site/404.html
+      - name: Verify GitHub Pages root and SEO files
+        run: |
+          test -f index.html
+          test -f 404.html
+          test -d assets
+          test -f sitemap.xml
+          test -f robots.txt
+          test -f site.webmanifest
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit, unquote
+
+          class LocalAssets(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.paths = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag in ('script', 'img'):
+                      self.paths.append(attrs.get('src', ''))
+                  if tag == 'link':
+                      self.paths.append(attrs.get('href', ''))
+          missing = []
+          for html in Path('.').rglob('*.html'):
+              if '.github' in html.parts or 'docs' in html.parts:
+                  continue
+              parser = LocalAssets()
+              parser.feed(html.read_text(encoding='utf-8'))
+              for ref in parser.paths:
+                  if not ref or ref.startswith(('#', '//', 'data:')):
+                      continue
+                  parts = urlsplit(ref)
+                  if parts.scheme or parts.netloc:
+                      continue
+                  url_path = unquote(parts.path)
+                  candidate = Path(url_path.lstrip('/')) if url_path.startswith('/') else html.parent / url_path
+                  if not candidate.exists():
+                      missing.append(f'{html}: {ref}')
+          if missing:
+              raise SystemExit('Missing local assets:\n' + '\n'.join(missing))
+          print('All local page resources exist')
+          PY

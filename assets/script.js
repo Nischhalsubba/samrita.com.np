@@ -209,10 +209,14 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeCertificateModal();
 });
 
+let contactSubmissionPending = false;
 contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!formStatus) return;
+  if (!formStatus || contactSubmissionPending) return;
 
+  contactSubmissionPending = true;
+  const submitButton = contactForm.querySelector('[type="submit"]');
+  if (submitButton) submitButton.disabled = true;
   formStatus.textContent = "Sending your message...";
   formStatus.className = "form-status";
 
@@ -231,6 +235,9 @@ contactForm?.addEventListener("submit", async (event) => {
   } catch (error) {
     formStatus.textContent = "Message could not be sent right now. Please try again or email directly.";
     formStatus.classList.add("error");
+  } finally {
+    contactSubmissionPending = false;
+    if (submitButton) submitButton.disabled = false;
   }
 });
 

@@ -50,12 +50,15 @@ flowchart TD
 
 ## Getting started
 
+This repository contains a static website with `index.html` at the root and no committed `package.json` or dependency lockfile. A local static server is sufficient for reviewing pages and relative asset paths:
+
 ```bash
 git clone https://github.com/Nischhalsubba/samrita.com.np.git
 cd samrita.com.np
+python3 -m http.server 8000
 ```
 
-Use the manifests and lockfiles in the repository to determine current setup commands.
+Open `http://localhost:8000/` in a browser. Stop the server with Ctrl+C. This command is for local preview, not deployment; the committed `wrangler.jsonc` is separate hosting configuration.
 
 ## Design & accessibility
 

@@ -217,7 +217,31 @@ document.querySelectorAll("[data-modal-close]").forEach((button) => {
   button.addEventListener("click", closeCertificateModal);
 });
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeCertificateModal();
+  if (!certificateModal || certificateModal.hidden) return;
+  if (event.key === "Escape") {
+    closeCertificateModal();
+    return;
+  }
+  if (event.key !== "Tab") return;
+
+  const focusable = [...certificateModal.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )];
+  if (focusable.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const focusOutside = !certificateModal.contains(document.activeElement);
+  if (event.shiftKey && (document.activeElement === first || focusOutside)) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (document.activeElement === last || focusOutside)) {
+    event.preventDefault();
+    first.focus();
+  }
 });
 
 contactForm?.addEventListener("submit", async (event) => {

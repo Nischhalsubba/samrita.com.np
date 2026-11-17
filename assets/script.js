@@ -16,8 +16,15 @@ let lastModalTrigger = null;
 
 body.classList.add("is-loading");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const storedTheme = localStorage.getItem("theme");
-root.dataset.theme = storedTheme || root.dataset.theme || "dark";
+let storedTheme = null;
+try {
+  storedTheme = window.localStorage.getItem("theme");
+} catch {
+  // Private browsing and restrictive storage policies can disable localStorage.
+}
+root.dataset.theme = storedTheme === "light" || storedTheme === "dark"
+  ? storedTheme
+  : root.dataset.theme || "dark";
 
 window.addEventListener("load", () => {
   body.classList.remove("is-loading");
@@ -29,7 +36,11 @@ window.addEventListener("load", () => {
 themeToggle?.addEventListener("click", () => {
   const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
   root.dataset.theme = nextTheme;
-  localStorage.setItem("theme", nextTheme);
+  try {
+    window.localStorage.setItem("theme", nextTheme);
+  } catch {
+    // Keep the active theme usable even when preferences cannot be persisted.
+  }
   themeToggle.setAttribute("aria-label", `Switch to ${nextTheme === "dark" ? "light" : "dark"} theme`);
 });
 

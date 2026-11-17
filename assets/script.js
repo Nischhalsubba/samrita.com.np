@@ -49,6 +49,13 @@ menuToggle?.addEventListener("click", () => {
   menuToggle.setAttribute("aria-expanded", String(isOpen));
 });
 
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !body.classList.contains("menu-open")) return;
+  body.classList.remove("menu-open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+  menuToggle?.focus();
+});
+
 document.querySelectorAll("a[href^='#'], .mobile-menu-link, .nav-link").forEach((link) => {
   link.addEventListener("click", () => {
     body.classList.remove("menu-open");
